@@ -33,7 +33,6 @@ def int_check(question, low=None, high=None):
             print("Please enter an integer")
             continue
 
-
 #Guess number routine
 
 lowest = int_check("Low Number: ")

@@ -36,29 +36,6 @@ Enjoy 😆
 
     return ""
 
-def check_rounds():
-    
-    while True:
-        response = input("How many rounds: ")
-
-        round_error = "Please type either <enter> or an integer that is more than 0"
-        if response != "":
-            try:
-                #If infinite mode not chosen, check response
-                response = int(response)
-
-                #Start of loop
-                if response < 1:
-                    print(round_error)
-                    continue
-
-            except ValueError:
-                print(round_error)
-                continue
-
-
-        return response
-
 def int_check(question, low=None, high=None):
 
     situation = ""
@@ -85,6 +62,9 @@ def int_check(question, low=None, high=None):
                 if response < low:
                     print(F"Please enter a number that is more than or equal to {low}")
                     continue
+
+            else:
+                print("please answer yes / no")
             
             return response
         
@@ -92,6 +72,7 @@ def int_check(question, low=None, high=None):
         except ValueError:
             print("Please enter an integer")
             continue
+
 
 #Ask user if they have played before
 #If yes, show instructions
@@ -106,7 +87,9 @@ if played_before == "no":
 #Rounds routine goes here
 
 #Prevent duplicate guesses
-secret = 7
+#Generate secret number between 1 to 100
+secret = random.randint(1, 100)
+
 guesses_allowed = 5
 
 already_guessed = [] 
@@ -117,34 +100,6 @@ guess = ""
 
 rounds_played = 0
 
-
-rounds = check_rounds()
-end_game = "no"
-
-while end_game == "no":
-
-    #Start of GamePlay Loop
-
-    #Rounds heading
-    print()
-    if rounds == "":
-        heading = f"Continous Mode: Round {rounds_played + 1}"
-    else:
-        heading = f"Round {rounds_played + 1} of {rounds}"
-    
-    print(heading)
-
-    #End game if exit code is typed
-    if guess == "xxx":
-        break
-
-    #Rest of loop / game
-    print(f"You choose {guess}")
-
-    rounds_played += 1
-    #end_game if requested number of rounds have been played
-    if rounds_played == rounds:
-        break
 
 #Havn't guessed number
 while guess != secret and guesses_left >= 1:
@@ -167,11 +122,20 @@ while guess != secret and guesses_left >= 1:
         elif guess > secret:
             print(F"Too high, try a lower number. Guesses left {guesses_left}")
     
+
+    elif guess == "xxx":
+        break
+
+    #Game over
     else:
         if guess < secret:
             print("Too low!, GAME OVER 😭")
+            print(F"Secret: {secret}")
         elif guess > secret:
             print("Too high!, GAME OVER 😭")
+            print(F"Secret: {secret}")
+
+
 
 #Correctly guessed number
 if guess == secret:
