@@ -28,7 +28,7 @@ This is a game made to play Higher/Lower in python.
 Answer with how many rounds you will play or type enter for infinite mode. 
 Please type a number between 1-100 and see if you can find the computer choice.
 The computer will respond if the number is higher or lower than the given response.
-You have only 9 attempts to guess the number. But if you dont want to play anymore type xxx or x to quit, 
+You have only 6 attempts to guess the number. But if you dont want to play anymore type xxx to quit, 
 you can see your game summary at the end of your game and how many guesses you have done. 
 Enjoy 😆
     
@@ -90,7 +90,7 @@ if played_before == "no":
 #Generate secret number between 1 to 100
 secret = random.randint(1, 100)
 
-guesses_allowed = 5
+guesses_allowed = 6
 
 already_guessed = [] 
 guesses_left = guesses_allowed
@@ -99,12 +99,14 @@ num_won = 0
 guess = ""
 
 rounds_played = 0
+rounds_lost = 0
+rounds_won = 0
 
 
 #Havn't guessed number
 while guess != secret and guesses_left >= 1:
 
-    guess = int(input("Guess: "))
+    guess = int_check("What is your guess?: ", 1, 100)
 
     #check that guess is not a duplicate
     if guess in already_guessed:
@@ -131,20 +133,42 @@ while guess != secret and guesses_left >= 1:
         if guess < secret:
             print("Too low!, GAME OVER 😭")
             print(F"Secret: {secret}")
+            result = "loss"
         elif guess > secret:
             print("Too high!, GAME OVER 😭")
             print(F"Secret: {secret}")
-
+            result = "loss"
 
 
 #Correctly guessed number
 if guess == secret:
     if guesses_left == guesses_allowed:
         print("Amazing you got it 😣")
+        result = "win"
     else:
         print("You got it 🎊")
+        result = "win"
 
 
 #Put endgame content here
+if result == "loss":
+    rounds_lost += 1
+    rounds_played += 1
+
+if result == "win":
+    rounds_won += 1
+    rounds_played += 1
+
+yes_no("Do you want to play again?: ")
+
+#Quick calculations
+
+percent_win = rounds_won / rounds_played * 100
+percent_lose = rounds_lost / rounds_played * 100
+
+#End of game statements
 print()
-print("Thank you for playing my game 😆")
+print('***** End Game Summary  *****')
+print(f"Win: {rounds_won}, {percent_win:.0f}% \nLoss: {rounds_lost}, {percent_lose:.0f}%")
+print()
+print("Thanks for playing my game 😆")

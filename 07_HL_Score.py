@@ -25,11 +25,14 @@ for item in test_results:
 #Quick calculations
 rounds_won = rounds_played - rounds_lost
 
+ #Calculate Game Stats
+percent_win = rounds_won / rounds_played * 100
+percent_lose = rounds_lost / rounds_played * 100
 
 
 #End of game statements
 print()
 print('***** End Game Summary  *****')
-print(f"Won: {rounds_won} \t\t Lost: {rounds_lost}")
+print(f"Win: {rounds_won}, {percent_win:.0f}% \nLoss: {rounds_lost}, {percent_lose:.0f}%")
 print()
 print("Thanks for playing")
