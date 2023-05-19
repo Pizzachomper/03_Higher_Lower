@@ -1,5 +1,8 @@
+#Base component V3
+
 import random
 import math
+
 #Functions go here
 
 def yes_no(question):
@@ -36,10 +39,9 @@ Enjoy 😆
 
     return ""
 
-
-
 def int_check(question, low=None, high=None, exit_code=None):
     
+    #Check if user has entered a number between 1 - 100
     if low is None and high is None:
         error = "Please enter an integer"
         situation = "any integer"
@@ -58,7 +60,7 @@ def int_check(question, low=None, high=None, exit_code=None):
         try:
             response =  int(response)
         
-            # check that integer is valid (ie: not too low / too high etc)
+            # check that integer is valid (ie: not too low / too hig etc)
             if situation == "any integer":
                 return response
 
@@ -70,80 +72,93 @@ def int_check(question, low=None, high=None, exit_code=None):
                 if response >= low:
                     return response
             
+            #Print out errors
             print(error)            
         
         except ValueError:
             print(error)
             
+# main routine goes here
 
-#Ask user if they have played before
-#If yes, show instructions
+rounds_played = 0
+rounds_won = 0
+rounds_lost = 0
+score = 0
 
+low_number = 1
+high_number = 100
+
+guesses_allowed = 6
+
+mode = "regular"
+
+#Title
+print()
+print("*^* Welcome to Higher Lower *^*")
+print()
+
+#Ask user if they have played the game before
 played_before = yes_no("Have you played this game before? ")
 print(F"You choose {played_before}")
+print()
 
 if played_before == "no":
     instructions()
 
-#Ask user for # of rounds, enter for INFINITE MODE
-#Rounds routine goes here
-
-#Prevent duplicate guesses
-#Generate secret number between 1 to 100
-
-
-guesses_allowed = 6
-
-already_guessed = [] 
-guesses_left = guesses_allowed
-num_won = 0
-
-guess = ""
-
-rounds_played = 0
-rounds_lost = 0
-rounds_won = 0
-
-
-mode = "regular"
-
+#Ask user how many rounds
 rounds = int_check("How many rounds: ", 1, exit_code = "")
+print()
 
 if rounds == "":
     mode = "infinite"
     rounds = 5
 
-# rounds loop
+#Rounds loop
 end_game = "no"
 while end_game == "no":
+
+    secret = random.randint(1, 100)
+    
+    already_guessed = [] 
+
+    # start of round (initialise already guessed list and reset guesses left)
+
+    guesses_left = guesses_allowed
     
     if mode == "infinite":
-        heading = f"Round {rounds_played + 1} continues mode"
+        heading = f"Round {rounds_played + 1} (infinite mode)"
         rounds += 1
     else:
         heading = f"Round {rounds_played + 1} of {rounds}"
         
-    print()
     print(heading)
-
-    secret = random.randint(1, 100)
-    print(f"spoiler alert: {secret}")
-
-    rounds_played += 1
     
-    #Havn't guessed number
+    guess = ""
+    # Start Round!!
     while guess != secret and guesses_left >= 1:
-
-        guess = int_check("What is your guess?: ", 1, 100)
-
+    
+        #Ask user for their guess
+        guess = int_check("What is your guess (1 - 100): ", low_number, high_number, "xxx")
+        print("you guessed", guess)
+        
         #check that guess is not a duplicate
         if guess in already_guessed:
-            print(F"You already guessed that number 😡! Please try again, You still have {guesses_left} guesses left.")
+            print(f"You already guessed that number 😡! Please try again, You still have {guesses_left} guesses left.")
+            print()
             continue
 
-        guesses_left -= 1
         already_guessed.append(guess)
 
+        #Take away user guesses for each go
+        guesses_left -= 1
+
+        # Check user hasn't entered the same number again or exit code
+
+        if guess == "xxx":
+            end_game = "yes"
+            break            
+        
+        #Compare guess to secret number
         #Too low or too high
         if guesses_left >= 1:
             
@@ -151,49 +166,45 @@ while end_game == "no":
                 print(F"Too low, try a higher number. Guesses left {guesses_left}")
             elif guess > secret:
                 print(F"Too high, try a lower number. Guesses left {guesses_left}")
-        
 
-        elif guess == "xxx":
-            end_game = "yes"
+            print()
+
+        #Correctly guessed secret
+        if guess == secret:
+            
+            rounds_played += 1
+            rounds_won += 1
+            print("You got it 🎊")
+            print()
+            score += 100
+            score += guesses_left * 15
             break
 
-               #Game over
-        else:
+        #User runs out of guesses
+        if guesses_left <=0:
+            print()
             if guess < secret:
                 print("Too low!, GAME OVER 😭")
-                print(F"Secret: {secret}")
 
             elif guess > secret:
                 print("Too high!, GAME OVER 😭")
-                print(F"Secret: {secret}")
 
-
-        #Correctly guessed number
-    if guess == secret:
-        result = "win"
-
-        # special print statement if they get it on the last guess
-        if guesses_left == guesses_allowed:
-            print("Amazing you got it 😣")
-        else:
-            print("You got it 🎊")
-
-        break
+            rounds_played += 1
+            rounds_lost += 1
+            print(F"Secret Number: {secret}")
+            print()
 
 
     # check if we are out of rounds
     if rounds_played >= rounds:
         break
-
-
+    
 #Quick calculations
-
 percent_win = rounds_won / rounds_played * 100
 percent_lose = rounds_lost / rounds_played * 100
 
 #End of game statements
-print()
 print('***** End Game Summary  *****')
-print(f"Win: {rounds_won}, {percent_win:.0f}% \nLoss: {rounds_lost}, {percent_lose:.0f}%")
+print(f"Wins: {rounds_won}, {percent_win:.0f}% \nLosses: {rounds_lost}, {percent_lose:.0f}%\nScore: {score} pts")
 print()
 print("Thanks for playing my game 😆")
